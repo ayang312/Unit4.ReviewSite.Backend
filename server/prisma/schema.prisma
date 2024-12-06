@@ -31,7 +31,7 @@ model Item {
 model Review {
   id       Int       @id @default(autoincrement())
   text     String
-  score    Int
+  rating    Int
   item     Item      @relation(fields: [itemId], references: [id])
   itemId   Int
   user     User      @relation(fields: [userId], references: [id])
