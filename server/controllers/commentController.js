@@ -42,4 +42,28 @@ const createComment = async (req, res) => {
   }
 };
 
-module.exports = { createComment };
+
+// get comments by logged-in user
+const getMyComments = async (req, res) => {
+  const userId = req.user.id; // extracted from the authenticated user
+
+  try {
+    // fetch all comments by the logged-in user
+    const comments = await prisma.comment.findMany({
+      where: { userId },
+      include: {
+        review: { select: { id: true, text: true } },
+      },
+    });
+    
+    if(comments.length === 0) {
+      return res.status(404).json({message: 'No comments found for this user'});
+    };
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error in fetching user comments", error);
+  }
+};
+
+module.exports = { createComment, getMyComments };

@@ -60,6 +60,7 @@ const getMyReviews = async (req, res) => {
   }
 };
 
+// Update my review
 const updateReview = async (req, res) => {
   const { userId, reviewId } = req.params;
   const { text, rating } = req.body;
