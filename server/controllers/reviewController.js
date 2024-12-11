@@ -96,6 +96,9 @@ const updateReview = async (req, res) => {
   }
 };
 
+// Delete a review
+
+
 module.exports = {
   getItemReviewById,
   createReview,

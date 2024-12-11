@@ -42,7 +42,6 @@ const createComment = async (req, res) => {
   }
 };
 
-
 // get comments by logged-in user
 const getMyComments = async (req, res) => {
   const userId = req.user.id; // extracted from the authenticated user
@@ -55,10 +54,12 @@ const getMyComments = async (req, res) => {
         review: { select: { id: true, text: true } },
       },
     });
-    
-    if(comments.length === 0) {
-      return res.status(404).json({message: 'No comments found for this user'});
-    };
+
+    if (comments.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No comments found for this user" });
+    }
 
     res.status(200).json(comments);
   } catch (error) {
@@ -66,4 +67,40 @@ const getMyComments = async (req, res) => {
   }
 };
 
-module.exports = { createComment, getMyComments };
+// update comment
+const updateComment = async (req, res) => {
+  const { userId, commentId } = req.params;
+  const { text } = req.body;
+  const authUserId = req.user.id; //authenticated user id
+
+  if (parseInt(userId) !== authUserId) {
+    return res.status(403).json({
+      message: "Unauthorized user: You can only update your own comments",
+    });
+  }
+
+  try {
+    // fetch user comments
+    const comment = await prisma.comment.findFirst({
+      where: { id: parseInt(commentId), userId: authUserId },
+    });
+    if (!comment) {
+      return res.status(404).json({ message: "no comments found" });
+    }
+
+    // update the comment
+    const updatedComment = await prisma.comment.update({
+      where: { id: parseInt(commentId) },
+      data: { text: text || comment.text },
+    });
+    res
+      .status(200)
+      .json({ message: "Comment updated successfully" }, updatedComment);
+  } catch (error) {
+    console.error("Error in updating comment", error);
+  };
+};
+
+// delete my comment
+
+module.exports = { createComment, getMyComments, updateComment };
