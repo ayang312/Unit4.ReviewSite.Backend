@@ -6,9 +6,9 @@ const {
   getItemById,
   getItemReviews,
   getItemReviewById,
-  createReview,
-  createComment,
 } = require("../controllers/itemController");
+const { createReview } = require("../controllers/reviewController");
+const { createComment } = require("../controllers/commentController");
 
 router.get("/", getItems);
 router.get("/:itemId", getItemById);
