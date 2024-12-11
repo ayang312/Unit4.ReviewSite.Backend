@@ -14,7 +14,7 @@ router.use("/items", require("./items"));
 router.use("/reviews", require("./reviews"));
 
 // // Comments Routes
-// router.use("/comments", require("./comments"));
+router.use("/comments", require("./comments"));
 
 // Handle requests to /api
 router.get("/", (req, res) => {

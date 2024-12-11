@@ -98,9 +98,33 @@ const updateComment = async (req, res) => {
       .json({ message: "Comment updated successfully" }, updatedComment);
   } catch (error) {
     console.error("Error in updating comment", error);
-  };
+  }
 };
 
 // delete my comment
+const deleteComment = async (req, res) => {
+  const { userId, commentId } = req.params;
+  const authUserId = req.user.id; //extracted from logged in user
 
-module.exports = { createComment, getMyComments, updateComment };
+  if (parseInt(userId) !== authUserId) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: You can only delete your own comments" });
+  }
+
+  try {
+    const comment = await prisma.comment.findFirst({
+      where: { id: parseInt(commentId), userId: authUserId },
+    });
+    if (!comment) {
+      return res.status(404).json({ message: "No comments found" });
+    }
+
+    await prisma.comment.delete({ where: { id: parseInt(commentId) } });
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleting comment", error);
+  }
+};
+
+module.exports = { createComment, getMyComments, updateComment, deleteComment };
