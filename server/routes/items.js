@@ -15,6 +15,6 @@ router.get("/:itemId", getItemById);
 router.get("/:itemId/reviews", getItemReviews);
 router.get("/:itemId/reviews/:reviewId", getItemReviewById);
 router.post("/:itemId/reviews", authenticate, createReview);
-router.post("/:itemId/reviews/:reviewId/comments", createComment);
+router.post("/:itemId/reviews/:reviewId/comments", authenticate, createComment);
 
 module.exports = router;
