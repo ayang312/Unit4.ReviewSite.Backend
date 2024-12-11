@@ -8,12 +8,12 @@ router.use("/auth", require("./auth"));
 router.use("/users", require("./users"));
 
 // Items Routes
-// router.use("/items", require("./items"));
+router.use("/items", require("./items"));
 
 // Reviews Routes
-// router.use("/reviews", require("./reviews"));
+router.use("/reviews", require("./reviews"));
 
-// Comments Routes
+// // Comments Routes
 // router.use("/comments", require("./comments"));
 
 // Handle requests to /api

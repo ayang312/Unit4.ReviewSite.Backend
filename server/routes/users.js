@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const authenticate = require("../middlewares/authenticate");
+const authorize = require("../middlewares/authorize");
+const { updateReview } = require("../controllers/reviewController");
 
 // Route to get all users
 router.get("/", async (req, res, next) => {
@@ -11,5 +14,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// Route to update review
+router.put("/:userId/reviews/:reviewId", authenticate, authorize, updateReview);
 
 module.exports = router;

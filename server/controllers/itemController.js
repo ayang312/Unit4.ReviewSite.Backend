@@ -47,30 +47,8 @@ const getItemReviews = async (req, res) => {
   }
 };
 
-// get item reviews by ID
-const getItemReviewById = async (req, res) => {
-  const { itemId, reviewId } = req.params;
-  try {
-    const review = await prisma.review.findFirst({
-      where: { id: parseInt(reviewId), itemId: parseInt(itemId) },
-      include: {
-        user: { select: { id: true, username: true } },
-      },
-    });
-
-    if (!review) {
-      return res.status(404).json({ message: "Review not found" });
-    }
-
-    res.status(200).json(review);
-  } catch (error) {
-    console.error("error in fetching specific review for item", error);
-  }
-};
-
 module.exports = {
   getItems,
   getItemById,
   getItemReviews,
-  getItemReviewById,
 };

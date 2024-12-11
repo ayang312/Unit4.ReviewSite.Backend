@@ -5,9 +5,11 @@ const {
   getItems,
   getItemById,
   getItemReviews,
-  getItemReviewById,
 } = require("../controllers/itemController");
-const { createReview } = require("../controllers/reviewController");
+const {
+  createReview,
+  getItemReviewById,
+} = require("../controllers/reviewController");
 const { createComment } = require("../controllers/commentController");
 
 router.get("/", getItems);
