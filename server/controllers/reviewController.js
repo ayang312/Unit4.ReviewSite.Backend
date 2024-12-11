@@ -97,11 +97,35 @@ const updateReview = async (req, res) => {
 };
 
 // Delete a review
+const deleteReview = async (req, res) => {
+  const { userId, reviewId } = req.params;
+  const authUserId = req.user.id; //extracted from logged in user
 
+  if (parseInt(userId) !== authUserId) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: You can only delete your own reviews" });
+  }
+
+  try {
+    const review = await prisma.review.findFirst({
+      where: { id: parseInt(reviewId), userId: authUserId },
+    });
+    if (!review) {
+      return res.status(404).json({ message: "No reviews found" });
+    }
+
+    await prisma.review.delete({ where: { id: parseInt(reviewId) } });
+    res.status(200).json({ message: "Review deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleting review", error);
+  }
+};
 
 module.exports = {
   getItemReviewById,
   createReview,
   getMyReviews,
   updateReview,
+  deleteReview,
 };
