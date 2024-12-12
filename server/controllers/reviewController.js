@@ -24,15 +24,19 @@ const getItemReviewById = async (req, res) => {
 // create a review
 const createReview = async (req, res) => {
   const { text, rating } = req.body;
+  const { itemId } = req.params;
+  const userId = req.user.id;
+
   try {
     const review = await prisma.review.create({
       data: {
-        text,
-        rating,
-        itemId: parseInt(req.params.itemId),
-        userId: req.userId,
+        text: text,
+        rating: rating,
+        item: { connect: { id: parseInt(itemId) } },
+        user: { connect: { id: parseInt(userId) } },
       },
     });
+
     res.status(201).json(review);
   } catch (error) {
     console.error("Error in creating review", error);
@@ -48,7 +52,7 @@ const getMyReviews = async (req, res) => {
     const reviews = await prisma.review.findMany({
       where: { userId },
       include: {
-        item: { select: { id: true, title } },
+        item: { select: { title: true } },
       },
     });
     if (reviews.length === 0) {
@@ -76,7 +80,7 @@ const updateReview = async (req, res) => {
   try {
     // check if review exists
     const review = await prisma.review.findFirst({
-      where: { id: parseInt(reviewId), userId: authUserId },
+      where: { id: parseInt(reviewId) },
     });
     if (!review) {
       return res.status(404).json({ message: "No review found" });

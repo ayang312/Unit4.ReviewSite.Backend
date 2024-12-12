@@ -36,7 +36,7 @@ const createComment = async (req, res) => {
         user: { select: { id: true, username: true } },
       },
     });
-    res.status(201).json({ message: "Comment created successfully" }, comment);
+    res.status(201).json(comment);
   } catch (error) {
     console.error("Error in creating comment", error);
   }
@@ -95,7 +95,7 @@ const updateComment = async (req, res) => {
     });
     res
       .status(200)
-      .json({ message: "Comment updated successfully" }, updatedComment);
+      .json(updatedComment);
   } catch (error) {
     console.error("Error in updating comment", error);
   }

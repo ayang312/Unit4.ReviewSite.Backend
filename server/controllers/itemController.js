@@ -12,9 +12,10 @@ const getItems = async (req, res) => {
 
 // get items by ID
 const getItemById = async (req, res) => {
+  const { itemId } = req.params;
   try {
     const item = await prisma.item.findUnique({
-      where: { id: req.params.itemId },
+      where: { id: parseInt(itemId) },
     });
     if (!item) {
       return res.status(404).json({ message: "item not found" });

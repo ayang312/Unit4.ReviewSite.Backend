@@ -1,10 +1,11 @@
+require("dotenv").config();
 const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const JWT = process.env.JWT;
 
 const generateToken = (user) => {
-  return jwt.sign({ userId: user.id }, process.env.JWT, { expiresIn: "1d" });
+  return jwt.sign({ userId: user.id }, JWT, { expiresIn: "1d" });
 };
 
 // register function
@@ -19,7 +20,9 @@ const register = async (req, res) => {
 
   try {
     // check if username is already being used
-    const existingUser = await prisma.user.findUnique({ where: username });
+    const existingUser = await prisma.user.findUnique({
+      where: { username: username },
+    });
     if (existingUser) {
       return res.status(400).json({ message: "Username is already taken" });
     }
@@ -58,7 +61,9 @@ const login = async (req, res) => {
 
   try {
     // find user by username
-    const user = await prisma.user.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({
+      where: { username: username },
+    });
     const isCorrectPassword = await bcrypt.compare(password, user.password);
     // error handling
     if (!user || !isCorrectPassword) {

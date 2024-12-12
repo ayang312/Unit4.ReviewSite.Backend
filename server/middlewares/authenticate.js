@@ -1,5 +1,7 @@
 // authenticate middleware
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const JWT = process.env.JWT;
 
 const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -11,8 +13,10 @@ const authenticate = async (req, res, next) => {
 
   try {
     // verify token with a secret
-    const decoded = jwt.verify(token, process.env.JWT);
-    req.userId = decoded.userId;
+    const decoded = jwt.verify(token, JWT);
+    // Attach the user information to req.user
+    req.user = { id: decoded.userId };
+    // if user is authorized, proceed to next middleware or route handler
     next();
   } catch (error) {
     console.error("Unauthorized: Invalid token", error);
